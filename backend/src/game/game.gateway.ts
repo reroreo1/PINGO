@@ -23,7 +23,6 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   private rooms: Record<string, { ballPos: { x: number, y: number }, moveAngle: number, ballSpeed: number, intervalId: NodeJS.Timer | null, players: { id: string, pos: number }[] }> = {};
 
   handleConnection(client: Socket, ...args: any[]) {
-    console.log('hadik'+client);
     console.log('A client just connected: ' + client.id);
   }
 
@@ -147,6 +146,10 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
       newY = newY < -320 / 16 ? (-320 / 16) : (325 / 16);
       ball.angle *= -1;
       ball.speed += 0.03;
+      if (mode == "crazy") {
+        ball.angle += Math.random() * (Math.PI / 4) - (Math.PI / 8);
+        ball.speed += Math.random() * 0.2 - 0.05;
+      }
     }
 
     ball.pos = {x: newX, y: newY};
