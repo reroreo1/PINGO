@@ -27,11 +27,10 @@ const Score = ({ leftScore, rightScore, lColor, rColor }: { leftScore: number; r
     top: '0',
     textAlign: 'center',
     color: `${lColor}`,
-    fontSize: '30rem',
+    fontSize: '3rem',
     paddingTop: '5%',
     fontFamily: 'Arial, sans-serif',
     zIndex: 1,
-    opacity: '0.3',
   };
   
   const rightScoreStyle: React.CSSProperties = {
@@ -40,11 +39,10 @@ const Score = ({ leftScore, rightScore, lColor, rColor }: { leftScore: number; r
     top: '0',
     textAlign: 'center',
     color: `${rColor}`,
-    fontSize: '30rem',
+    fontSize: '3rem',
     paddingTop: '5%',
     fontFamily: 'Arial, sans-serif',
     zIndex: 1,
-    opacity: '0.3',
   };
 
   return (
@@ -68,7 +66,6 @@ const Paddle = ({ color, pos }: { color: string; pos: string }) => {
     position: 'relative',
     top: pos,
     boxShadow: `0 0 1.25rem ${color}`, // 20px
-    borderRadius: '1.25rem', // 20px
     marginInline: '1.25rem', // 20px
     zIndex: 6,
   };
@@ -126,8 +123,6 @@ function App() {
         if (removeDecimalPart(newScore / 2) === 5) {
           setGameOver(true);
           window.location.reload();
-          // let navigate = useNavigate();
-          // navigate("/home");
           socket.emit('gameended');
         }
         return newScore;
@@ -147,8 +142,6 @@ function App() {
         if (removeDecimalPart(newScore / 2) === 5) {
           setGameOver(true);
           window.location.reload();
-          // let navigate = useNavigate();
-          // navigate("/home");
           socket.emit('gameended');
         }
         return newScore;
@@ -161,7 +154,7 @@ function App() {
   }, []);
 
 
-  const [gameMode, setGameMode] = React.useState<null | 'classic' | 'football'>(null);
+  const [gameMode, setGameMode] = React.useState<null | 'classic' | 'crazy'>(null);
 
 
   React.useEffect(() => {
@@ -176,10 +169,10 @@ function App() {
       isSecondPlayer = SecondPlayer;
       chosenMode = chosen;
       if (chosenMode === "classic") {
-        leftcolor = "#E15253";
-        rightcolor = "#5699AF";
+        leftcolor = "white";
+        rightcolor = "white";
       }
-      else if (chosenMode === "football") {
+      else if (chosenMode === "crazy") {
         leftcolor = "white";
         rightcolor = "white";
       }
@@ -202,7 +195,7 @@ function App() {
   };
 
   const handleKeyUp = () => {
-    movePaddle.current = 0; // 7bess
+    movePaddle.current = 0; 
   };
 
   React.useEffect(() => {
@@ -212,7 +205,7 @@ function App() {
           const newPosition = prev + movePaddle.current;
           let maxPos = 17.5;
           let minPos = -17.187;
-          if (chosenMode === "football") {
+          if (chosenMode === "crazy") {
             maxPos = 10;
             minPos = -10;
           }
@@ -252,7 +245,7 @@ function App() {
     return (
       <div className="container">
         <button className='button-86' onClick={() => setGameMode('classic')}>classic</button>
-        <button className='button-86' onClick={() => setGameMode('football')}>Football</button>
+        <button className='button-86' onClick={() => setGameMode('crazy')}>crazy</button>
       </div>
     );
   }
@@ -268,9 +261,9 @@ function App() {
 
   return (
     <div className={`table-${chosenMode}`}>
-      <Paddle color="#E15253" pos={`${firstPaddlePos}rem`} />
+      <Paddle color="#E6E6E9" pos={`${firstPaddlePos}rem`} />
       <Ball/>
-      <Paddle color="#5699AF" pos={`${secondPaddlePos}rem`} />
+      <Paddle color="#E6E6E9" pos={`${secondPaddlePos}rem`} />
       <Score leftScore={removeDecimalPart(leftscore / 2)} rightScore={removeDecimalPart(rightscore / 2)} lColor={leftcolor} rColor={rightcolor} />
       <div className="lineC">
         <div className="line"></div>

@@ -17,7 +17,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   private waitingRooms: Record<string, Socket | null> = {
     classic: null,
-    football: null,
+    crazy: null,
   };
 
   private rooms: Record<string, { ballPos: { x: number, y: number }, moveAngle: number, ballSpeed: number, intervalId: NodeJS.Timer | null, players: { id: string, pos: number }[] }> = {};
@@ -66,7 +66,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   @SubscribeMessage('gameMode')
-  handleGameMode(client: Socket, gameMode: 'classic' | 'football'): void {
+  handleGameMode(client: Socket, gameMode: 'classic' | 'crazy'): void {
     console.log(`Client ${client.id} chose ${gameMode} mode`);
 
     if (this.waitingRooms[gameMode]) {
@@ -116,7 +116,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     if ((newX < -575 / 16 || newX > 580 / 16)) {
 
-      if ((mode === "football" && newY > 10) || (mode === "football" && newY < -10)) {
+      if ((mode === "crazy" && newY > 10) || (mode === "crazy" && newY < -10)) {
         if (newX < -575 / 16) {
           newX = -574 / 16;
           ball.angle = Math.PI - ball.angle;
@@ -171,7 +171,6 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   
   @SubscribeMessage('gameended')
   handleEndgame(client: Socket, payload: { room: string }): void {
-    
   }
 
 

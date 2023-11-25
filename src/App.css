@@ -6,7 +6,7 @@
     align-items: center;
     position: relative;
     box-sizing: border-box;
-    border: 4px solid #FFFFFF;
+    outline: thick solid #FFFFFF;
     /* Changed border color */
 }
 
@@ -17,13 +17,13 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(to right, #0072ff, #00c6ff);
+    background:  black;
     /* New gradient colors */
     opacity: 0.7;
     /* Adjusted opacity */
 }
 
-.table-football {
+.table-crazy {
     display: flex;
     width: 100%;
     height: 100%;
@@ -31,20 +31,17 @@
     align-items: center;
     position: relative;
     box-sizing: border-box;
-    border: 4px solid #FFFFFF;
+    outline: thick solid #FFFFFF;
     /* Changed border color */
 }
 
-.table-football::before {
+.table-crazy::before {
     content: "";
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: url('path_to_new_football_background_image.jpg') no-repeat center center;
-    /* Updated background image */
-    background-size: cover;
 }
 
 .lineC {
@@ -74,7 +71,7 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    gap: 20px;
+    gap: 40px;
 }
 /* CSS */
 .button-86 {
