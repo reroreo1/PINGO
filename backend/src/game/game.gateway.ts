@@ -101,7 +101,6 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     const paddleHeight = 6.625;
 
 
-
     if (newX > 540 / 16 && newY <= this.rooms[room].players[1].pos + paddleHeight / 2 && newY >= this.rooms[room].players[1].pos - paddleHeight / 2) {
       newX = 540 / 16;
       ball.angle = Math.PI - ball.angle;
@@ -114,17 +113,6 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
 
     if ((newX < -575 / 16 || newX > 580 / 16)) {
-
-      if ((mode === "crazy" && newY > 10) || (mode === "crazy" && newY < -10)) {
-        if (newX < -575 / 16) {
-          newX = -574 / 16;
-          ball.angle = Math.PI - ball.angle;
-        }
-        else if (newX > 580 / 16) {
-          newX = 579 / 16;
-          ball.angle = Math.PI - ball.angle;
-        }
-      }
 
       if (newX < -575 / 16) {
         this.server.to(this.rooms[room].players[0].id).emit('rightscored');
@@ -146,10 +134,6 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
       newY = newY < -320 / 16 ? (-320 / 16) : (325 / 16);
       ball.angle *= -1;
       ball.speed += 0.03;
-      if (mode == "crazy") {
-        ball.angle += Math.random() * (Math.PI / 4) - (Math.PI / 8);
-        ball.speed += Math.random() * 0.2 - 0.05;
-      }
     }
 
     ball.pos = {x: newX, y: newY};

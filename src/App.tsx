@@ -17,16 +17,15 @@ let paddlepos1:number;
 let roomid:any;
 let isSecondPlayer:number;
 let chosenMode:string;
-let leftcolor:string;
-let rightcolor:string;
 
-const Score = ({ leftScore, rightScore, lColor, rColor }: { leftScore: number; rightScore: number, lColor: string, rColor: string }) => {
+
+const Score = ({ leftScore, rightScore}: { leftScore: number; rightScore: number}) => {
   const leftScoreStyle: React.CSSProperties = {
     position: 'absolute',
     left: '15%',
     top: '0',
     textAlign: 'center',
-    color: `${lColor}`,
+    color: 'white',
     fontSize: '3rem',
     paddingTop: '5%',
     fontFamily: 'Arial, sans-serif',
@@ -38,7 +37,7 @@ const Score = ({ leftScore, rightScore, lColor, rColor }: { leftScore: number; r
     right: '15%',
     top: '0',
     textAlign: 'center',
-    color: `${rColor}`,
+    color: 'white',
     fontSize: '3rem',
     paddingTop: '5%',
     fontFamily: 'Arial, sans-serif',
@@ -74,19 +73,20 @@ const Paddle = ({ color, pos }: { color: string; pos: string }) => {
 };
 
 
-const Ball = ({}: {}) => {
+const Ball = ({gameSt}: {gameSt: String}) => {
   const [ballPos, setBallPos] = React.useState({x: 0, y: 0});
-  
-  
+  const [ballColor, setBallColor] = React.useState('white');
+  const [shadow, setShadow] = React.useState('0 0 1.25rem white');
   const ballStyle: React.CSSProperties = {
-    width: '1.5625rem', // 25px
-    height: '1.5625rem', // 25px
-    backgroundColor: 'white',
+    width: '1.5625rem',
+    height: '1.5625rem',
+    backgroundColor: ballColor,
     borderRadius: '50%',
     position: 'relative',
+    display: ballColor,
     left: `${ballPos.x}rem`, 
     top: `${ballPos.y}rem`, 
-    boxShadow: '0 0 1.25rem white' // 20px
+    boxShadow: shadow 
   };
   
   React.useEffect(() => {
@@ -98,6 +98,24 @@ const Ball = ({}: {}) => {
       socket.off('ballmove');
     }
   }, []);
+  if(gameSt == 'crazy'){React.useEffect(() => {
+    
+    const interval = setInterval(() => {
+      // Toggle the ball color between its original color and the background color
+      setBallColor(prevColor => prevColor === "white" ? "black" : "white");
+      setShadow(prevShadow => prevShadow === "none" ? "0 0 1.25rem white" : "none");
+    }, 200);
+    return () => clearInterval(interval); // Clear the interval when the component unmounts
+}, []);
+React.useEffect(() => {
+  const interval = setInterval(() => {
+    // Toggle the ball color between its original color and the background color
+    setBallColor(prevColor => prevColor === "black" ? "white" : "black");
+    setShadow(prevShadow => prevShadow === "0 0 1.25rem white" ? "none" : "0 0 1.25rem white");
+  }, 1000);
+  return () => clearInterval(interval); // Clear the interval when the component unmounts
+}, []);
+}
 
   return <div style={ballStyle}></div>;
 };
@@ -106,7 +124,6 @@ const Ball = ({}: {}) => {
 function App() {
   const [firstPaddlePos, setFirstPaddlePos] = React.useState(0);
   const movePaddle = React.useRef(0);
-
   const [secondPaddlePos, setSecondPaddlePos] = React.useState(0);
 
   const [leftscore, setLeftScore] = React.useState(0);
@@ -134,7 +151,6 @@ function App() {
     }
   }, []);
 
-
   React.useEffect(() => {
     socket.on('rightscored', () => {
       setRightScore((prevScore: number) => {
@@ -156,7 +172,7 @@ function App() {
 
   const [gameMode, setGameMode] = React.useState<null | 'classic' | 'crazy'>(null);
 
-
+  let gameSt: String;
   React.useEffect(() => {
     if (gameMode) {
       socket.emit('gameMode', gameMode);
@@ -168,14 +184,6 @@ function App() {
     socket.on('startgame', ({room, SecondPlayer, chosen}) => {
       isSecondPlayer = SecondPlayer;
       chosenMode = chosen;
-      if (chosenMode === "classic") {
-        leftcolor = "white";
-        rightcolor = "white";
-      }
-      else if (chosenMode === "crazy") {
-        leftcolor = "white";
-        rightcolor = "white";
-      }
       console.log("player status: ",isSecondPlayer);
       setIsGameReady(true);
       roomid = room;
@@ -205,10 +213,6 @@ function App() {
           const newPosition = prev + movePaddle.current;
           let maxPos = 17.5;
           let minPos = -17.187;
-          if (chosenMode === "crazy") {
-            maxPos = 10;
-            minPos = -10;
-          }
           
           paddlepos1 = Math.min(Math.max(newPosition, minPos), maxPos);
           socket.emit('paddlemove', { room: roomid, pos: paddlepos1, SecondPlayer: isSecondPlayer });
@@ -249,7 +253,7 @@ function App() {
       </div>
     );
   }
-  
+  gameSt = gameMode;
 
   if (!isGameReady) {
     return (
@@ -261,10 +265,10 @@ function App() {
 
   return (
     <div className={`table-${chosenMode}`}>
-      <Paddle color="#E6E6E9" pos={`${firstPaddlePos}rem`} />
-      <Ball/>
-      <Paddle color="#E6E6E9" pos={`${secondPaddlePos}rem`} />
-      <Score leftScore={removeDecimalPart(leftscore / 2)} rightScore={removeDecimalPart(rightscore / 2)} lColor={leftcolor} rColor={rightcolor} />
+      <Paddle color="#A6A6A8" pos={`${firstPaddlePos}rem`} />
+      <Ball gameSt={gameSt}/>
+      <Paddle color="#A6A6A8" pos={`${secondPaddlePos}rem`} />
+      <Score leftScore={removeDecimalPart(leftscore / 2)} rightScore={removeDecimalPart(rightscore / 2)}/>
       <div className="lineC">
         <div className="line"></div>
       </div>
