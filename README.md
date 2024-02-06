@@ -1,3 +1,4 @@
+# A multiplayer ping pong game using React socket.io on client side and nestJS on backend
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
